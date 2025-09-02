@@ -1,2 +1,40 @@
 /doc/
 /Meta/
+
+# R session files
+.Rhistory
+.RData
+.Ruserdata
+
+# RStudio project files
+.Rproj.user/
+*.Rproj
+
+# Package build artifacts
+.Rcheck/
+*.tar.gz
+*.tgz
+*.zip
+
+# Compiled docs and caches
+inst/doc/
+vignettes/*.html
+vignettes/*.pdf
+vignettes/*.tex
+vignettes/*_cache/
+vignettes/*_files/
+
+# Temporary files
+*.o
+*.so
+*.dll
+*.dylib
+*.rds
+
+# Mac / Windows junk
+.DS_Store
+Thumbs.db
+
+# Other editor/IDE junk
+*~
+
