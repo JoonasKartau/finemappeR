@@ -2,7 +2,7 @@
 % Please edit documentation in R/calculate_pips.R
 \name{.calculate_pips}
 \alias{.calculate_pips}
-\title{FINEMAP-MISS PIPs}
+\title{FINEMAP-miss PIPs}
 \usage{
 .calculate_pips(
   init_configs,
@@ -33,5 +33,5 @@ Numeric vector of PIPs for each variant.
 }
 \description{
 Computes the postrior inclusion probabilities (PIPs), given the evaluated
-causal configurations in FINEMAP-MISS.
+causal configurations in FINEMAP-miss.
 }

@@ -1,6 +1,6 @@
-#' Fine-mapping meta-analyses with missing information
+#' Fine-mapping GWASS summary stastics
 #'
-#' \code{FINEMAP} performs Bayesian variable selection on a set of genetic
+#' \code{original_finemap} performs Bayesian variable selection on a set of genetic
 #' variants and a phenotype, using marginal effect estimates \eqn{\boldsymbol{\widehat \beta}},
 #'  their standard errors \eqn{\boldsymbol{s}}, and  a reference LD panel \eqn{\boldsymbol{R}}
 #'  as input. This is a recreation of the C++ implementation by Christian Benner and Matti Pirinen.
@@ -80,21 +80,21 @@
 #' @export
 #'
 #' @examples
-#'#Running FINEMAP with imputedd summary statistics
+#'#Running FINEMAP with imputed summary statistics
 #'
 #'#Loading toy data with one true causal variant.
-#'data("toydata_FINEMAPMISS")
+#'data("toydata_finemapmiss")
 #'
-#'betas <- toydata_FINEMAPMISS$betas
-#'ses <- toydata_FINEMAPMISS$ses
-#'MAF <- toydata_FINEMAPMISS$MAF
-#'LD <- toydata_FINEMAPMISS$LD
+#'betas <- toydata_finemapmiss$betas
+#'ses <- toydata_finemapmiss$ses
+#'MAF <- toydata_finemapmiss$MAF
+#'LD <- toydata_finemapmiss$LD
 #'
-#'n <- toydata_FINEMAPMISS$study_sample_sizes
+#'n <- toydata_finemapmiss$study_sample_sizes
 #'p <- dim(LD)[1]
 #'
 #'#Simulating missingness in 20% of variants (including the true causal variant)
-#'missing_data <- unique(sort(c(toydata_FINEMAPMISS$causal_snp,
+#'missing_data <- unique(sort(c(toydata_finemapmiss$causal_snp,
 #'                               cbind(sample(1:p, round(p*0.2))))))
 #'
 #'#Which dataset are the variants missing from?
@@ -150,7 +150,7 @@
 #'variant_sample_sizes <- rep(sum(n),p)
 #'
 #'#Running FINEMAP
-#'output_FM <- original_FINEMAP(ses = ses,
+#'output_FM <- original_finemap(ses = ses,
 #'                          betas = betas,
 #'                          R = LD,
 #'                          n_studies = 2,
@@ -161,7 +161,7 @@
 #'
 #'
 #'
-original_FINEMAP <- function(betas,
+original_finemap <- function(betas,
                              ses,
                              R,
                              tau = 0.05,

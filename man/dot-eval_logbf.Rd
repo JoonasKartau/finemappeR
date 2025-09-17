@@ -17,7 +17,7 @@
 Numeric value of the log Bayes factor for the configuration
 }
 \description{
-Evaluate the log Bayes-factor of a configuration in FINEMAP-MISS. Computed using
+Evaluate the log Bayes-factor of a configuration in FINEMAP-miss. Computed using
 the pre-computed vector \eqn{\boldsymbol{\widehat z}^{T} \boldsymbol{R_M}^{-1}\boldsymbol{R}_{\boldsymbol{\gamma}} }
 and matrix \eqn{\mathbb{I}_p + \boldsymbol{R}_{\boldsymbol{\gamma}}^{T} \boldsymbol{R_M}^{-1} \boldsymbol{R}_{\boldsymbol{\gamma}} }
 }

@@ -22,6 +22,6 @@ IVW <- function(betas, ses){
   w <- w^2
   beta_meta <- rowSums(w*betas)/rowSums(w)
   se_meta <- rowSums(w)^(-1/2)
-  return(list("beta meta" = beta_meta, "se meta" = se_meta))
+  return(list("beta_meta" = beta_meta, "se_meta" = se_meta))
 }
 

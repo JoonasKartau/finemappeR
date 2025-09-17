@@ -1,8 +1,8 @@
 ---
-title: "FINEMAP-MISS"
+title: "FINEMAP-miss"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{FINEMAP-MISS}
+  %\VignetteIndexEntry{FINEMAP-miss}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -18,28 +18,28 @@ knitr::opts_chunk$set(
 Using data from 1000 genomes <ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/ALL.chr6.phase3_shapeit2_mvncall_integrated_v5b.20130502.genotypes.vcf.gz>, a example GWAS was generated for two cohorts. Variant 99 has a true effect on the simulated phenotype, explaining 1\% of the phenotypic variance. 
 
 ```{r setup}
-library(FINEMAPMISS)
+library(finemappeR)
 knitr::opts_chunk$set(fig.width=7, fig.height=5, out.width="90%")
 ```
 
 ```{r read data}
-data("toydata_FINEMAPMISS")
-betas <- toydata_FINEMAPMISS$betas
-ses <- toydata_FINEMAPMISS$ses
-MAF <- toydata_FINEMAPMISS$MAF
-LD <- toydata_FINEMAPMISS$LD
+data("toydata_finemapmiss")
+betas <- toydata_finemapmiss$betas
+ses <- toydata_finemapmiss$ses
+MAF <- toydata_finemapmiss$MAF
+LD <- toydata_finemapmiss$LD
 
-n <- toydata_FINEMAPMISS$study_sample_sizes
+n <- toydata_finemapmiss$study_sample_sizes
 p <- dim(LD)[1]
 
 par(mfrow = c(1,2))
 minus_log10p <- -log10(2*(1 - pnorm(abs(betas/ses))))
 plot(minus_log10p[,1], ylab = "-log10P", main = "Study 1")
-points(toydata_FINEMAPMISS$causal_snp, minus_log10p[toydata_FINEMAPMISS$causal_snp,1],
+points(toydata_finemapmiss$causal_snp, minus_log10p[toydata_finemapmiss$causal_snp,1],
        pch = 21, bg = "green")
 legend("topleft", pch = 21, legend = c("Causal variant"), pt.bg = "green")
 plot(minus_log10p[,2], ylab = "-log10P", main = "Study 2")
-points(toydata_FINEMAPMISS$causal_snp, minus_log10p[toydata_FINEMAPMISS$causal_snp,2],
+points(toydata_finemapmiss$causal_snp, minus_log10p[toydata_finemapmiss$causal_snp,2],
        pch = 21, bg = "green")
 
 ```
@@ -51,7 +51,7 @@ Let's simulate missing data by removing values for 20\% of variants from one stu
 set.seed(1)
 
 #Simulating missingness in 20% of variants (including the true causal variant)
-missing_data <- unique(sort(c(toydata_FINEMAPMISS$causal_snp,
+missing_data <- unique(sort(c(toydata_finemapmiss$causal_snp,
                               cbind(sample(1:p, round(p*0.2))))))
 
 #Which dataset are the variants missing from?
@@ -71,9 +71,9 @@ variant_sample_sizes[missing_data] <- n[1]
 Let's meta-analyze the summary statistics and visualize the p-values of the combined effects.
 ```{r meta_p}
 meta_analysis <- IVW(betas = betas, ses = ses)
-meta_minus_log10p <- -log10(2*(1 - pnorm(abs(meta_analysis$`beta meta`/meta_analysis$`se meta`))))
+meta_minus_log10p <- -log10(2*(1 - pnorm(abs(meta_analysis$beta_meta/meta_analysis$se_meta))))
 plot(meta_minus_log10p, ylab = "-log10P", main = "Meta-analysis")
-points(toydata_FINEMAPMISS$causal_snp, meta_minus_log10p[toydata_FINEMAPMISS$causal_snp],
+points(toydata_finemapmiss$causal_snp, meta_minus_log10p[toydata_finemapmiss$causal_snp],
        pch = 21, bg = "green")
 legend("topleft", pch = 21, legend = c("Causal variant"), pt.bg = "green")
 ```
@@ -82,10 +82,10 @@ legend("topleft", pch = 21, legend = c("Causal variant"), pt.bg = "green")
 If we try to fine-map this partially missing data with FINEMAP, we cannot detect the true causal variant.
 ```{r FINEMAP}
 
-FM_output <- original_FINEMAP(ses = ses, betas = betas, R = LD, n_studies = 2,
+FM_output <- original_finemap(ses = ses, betas = betas, R = LD, n_studies = 2,
                               freqs = MAF, variant_sample_sizes = variant_sample_sizes)
 plot(FM_output$summary_table$prob, ylab = "PIP", main = "FINEMAP PIPs")
-points(toydata_FINEMAPMISS$causal_snp, FM_output$summary_table$prob[toydata_FINEMAPMISS$causal_snp],
+points(toydata_finemapmiss$causal_snp, FM_output$summary_table$prob[toydata_finemapmiss$causal_snp],
        pch = 21, bg = "green")
 points(FM_output$credible_sets[,1], FM_output$summary_table$prob[FM_output$cred[,1]],
        col = "red")
@@ -93,16 +93,16 @@ legend("topleft", pch = c(21,1), legend = c("Causal variant", "Credible set"), p
        col = c("black", "red"))
 ```
 
-## FINEMAP-MISS
-With FINEMAP-MISS, the true causal variant is included in the credible set.
-```{r FINEMAP-MISS}
+## FINEMAP-miss
+With FINEMAP-miss, the true causal variant is included in the credible set.
+```{r FINEMAP-miss}
 
-FMM_output <- run_FINEMAPMISS(ses = ses, betas = betas, R = LD, 
+FMM_output <- run_finemapmiss(ses = ses, betas = betas, R = LD, 
                           n_studies = 2, freqs = MAF, 
                           variant_sample_sizes = variant_sample_sizes,
                           scaled_data = T)
-plot(FMM_output$summary_table$prob, ylab = "PIP", main = "FINEMAP-MISS PIPs")
-points(toydata_FINEMAPMISS$causal_snp, FMM_output$summary_table$prob[toydata_FINEMAPMISS$causal_snp],
+plot(FMM_output$summary_table$prob, ylab = "PIP", main = "FINEMAP-miss PIPs")
+points(toydata_finemapmiss$causal_snp, FMM_output$summary_table$prob[toydata_finemapmiss$causal_snp],
        pch = 21, bg = "green")
 points(FMM_output$credible_sets[,1], FMM_output$summary_table$prob[FMM_output$credible_sets[,1]],
        col = "red")
@@ -155,15 +155,15 @@ ses_imputed[unobs2,2] <- imputation2[,3]
 variant_sample_sizes <- rep(sum(n),p)
 
 #Running FINEMAP
-FM_imputed_output <- original_FINEMAP(ses = ses_imputed,
+FM_imputed_output <- original_finemap(ses = ses_imputed,
                          betas = betas_imputed,
                          R = LD,
                          n_studies = 2,
                          variant_sample_sizes = variant_sample_sizes,
-                         freqs = toydata_FINEMAPMISS$MAF, scaled_data = T)
+                         freqs = toydata_finemapmiss$MAF, scaled_data = T)
 
 plot(FM_imputed_output$summary_table$prob, ylab = "PIP", main = "FINEMAP PIPs")
-points(toydata_FINEMAPMISS$causal_snp, FM_imputed_output$summary_table$prob[toydata_FINEMAPMISS$causal_snp],
+points(toydata_finemapmiss$causal_snp, FM_imputed_output$summary_table$prob[toydata_finemapmiss$causal_snp],
        pch = 21, bg = "green")
 points(FM_imputed_output$cred[,1], FM_imputed_output$summary_table$prob[FM_imputed_output$credible_sets[,1]],
        col = "red")

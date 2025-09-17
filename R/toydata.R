@@ -14,9 +14,9 @@
 #'   \item{study_sample_sizes}{numeric vector, sample size per study}
 #'   \item{causal_snp}{numeric, causal_snp index}
 #' }
-#' @usage data("toydata_FINEMAPMISS")
+#' @usage data("toydata_finemapmiss")
 #' @source Genotype subset taken from <ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/ALL.chr6.phase3_shapeit2_mvncall_integrated_v5b.20130502.genotypes.vcf.gz>
 #' @examples
-#' data("toydata_FINEMAPMISS")
-#' head(toydata_FINEMAPMISS)
-"toydata_FINEMAPMISS"
+#' data("toydata_finemapmiss")
+#' head(toydata_finemapmiss)
+"toydata_finemapmiss"

@@ -1,6 +1,6 @@
-#' FINEMAP-MISS credible sets
+#' FINEMAP-miss credible sets
 #'
-#' Computes credible sets from the fine-mapping output of FINEMAP-MISS.
+#' Computes credible sets from the fine-mapping output of FINEMAP-miss.
 #'
 #'
 #' @param cred_sizes Vector or numeric of size of credible sets to be created.

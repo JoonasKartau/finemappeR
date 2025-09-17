@@ -1,6 +1,6 @@
 #' Fine-mapping meta-analyses with missing information
 #'
-#' \code{run_FINEMAPMISS} performs Bayesian variable selection on a set of genetic
+#' \code{run_finemapmiss} performs Bayesian variable selection on a set of genetic
 #' variants and a phenotype, using marginal effect estimates \eqn{\boldsymbol{\widehat \beta}},
 #'  their standard errors \eqn{\boldsymbol{s}}, and  a reference LD panel \eqn{\boldsymbol{R}}
 #'  as input. \cr
@@ -11,21 +11,26 @@
 #'  If the data are combined into a single dataset in advance, \code{FINEMAPMISS}
 #'  can still be run, but with reduced accuracy.
 #'
-#' @param ses A vector or matrix of GWAS marginal effect standard errors \eqn{\boldsymbol{s}}.
-#' Takes the form of a vector if there is only a single dataset or the data has
-#' been combined in advance. Otherwise, it is a matrix where each column contains
-#' the standard errors for one dataset. For any unobserved variants in a study,
-#' the standard errors should be set to \code{Inf}.
 #' @param betas A vector or matrix of GWAS marginal effects \eqn{\boldsymbol{\widehat \beta}}.
 #' Takes the form of a vector if there is only a single dataset or the data has
 #' been combined in advance. Otherwise, it is a matrix where each column contains
 #' the marginal effects for one dataset. For any unobserved variants in a study,
 #' the marginal effects should be set to \code{0}.
+#' @param ses A vector or matrix of GWAS marginal effect standard errors \eqn{\boldsymbol{s}}.
+#' Takes the form of a vector if there is only a single dataset or the data has
+#' been combined in advance. Otherwise, it is a matrix where each column contains
+#' the standard errors for one dataset. For any unobserved variants in a study,
+#' the standard errors should be set to \code{Inf}.
 #' @param INFO A vector or matrix of variant INFO scores.
 #' Takes the form of a vector if there is only a single dataset or the data has
 #' been combined in advance. Otherwise, it is a matrix where each column contains
 #' the INFO scores for one dataset. For any unobserved variants in a study,
-#' the marginal effects should be set to \code{0}.
+#' the INFO should be set to \code{0}.
+#' @param freqs A vector or matrix of variant frequencies.
+#' Takes the form of a vector if there is only a single dataset or the data has
+#' been combined in advance. Otherwise, it is a matrix where each column contains
+#' the variant frequencies for one dataset. For any unobserved variants in a study,
+#' the frequency should be set to \code{0}.
 #' @param R Reference LD matrix \eqn{\boldsymbol{R}} for the set of analyzed variants.
 #' @param tau Prior standard error for the casual effects. Set by default to \code{0.05}.
 #' @param adj Adjustment constant \eqn{\varepsilon}, shrinks the correlations in
@@ -44,16 +49,12 @@
 #' @param variant_sample_sizes Vector of combined sample sizes per variant, from the meta-analysis.
 #' @param max_overlap Binary parameter denoting whether the maximum sample
 #' overlap is assumed when estimating \eqn{\boldsymbol{M}}.
-#' @param freqs A vector or matrix of variant frequencies.
-#' Takes the form of a vector if there is only a single dataset or the data has
-#' been combined in advance. Otherwise, it is a matrix where each column contains
-#' the variant frequencies for one dataset. For any unobserved variants in a study,
-#' the marginal effects should be set to \code{0}.
 #' @param init_config Initial configuration, from which fine-mapping is started.
 #' @param find_optimal_start Should a search be made to find an optimal starting configuration for fine-mapping?
 #' @param n_start_configs How many configurations should be checked to determine optimal start?
 #' @param start_config_sizes How large are the initial start configurations?
 #' @param initial_config_size Size of initial config
+#' @param prior_exponent Parameter that controls strictness of prior for number of variants. Higher value penalizes large configurations.
 #' @param scaled_data Has the data been scaled with allele frequencies in advance?
 #' @param use_N Should the variant sample sizes be used for fine-mapping, instead of the
 #' GWAS standard errors? (experimental)
@@ -94,18 +95,18 @@
 #'
 #' @examples
 #'#Loading toy data with one true causal variant.
-#'data("toydata_FINEMAPMISS")
+#'data("toydata_finemapmiss")
 #'
-#'betas <- toydata_FINEMAPMISS$betas
-#'ses <- toydata_FINEMAPMISS$ses
-#'MAF <- toydata_FINEMAPMISS$MAF
-#'LD <- toydata_FINEMAPMISS$LD
+#'betas <- toydata_finemapmiss$betas
+#'ses <- toydata_finemapmiss$ses
+#'MAF <- toydata_finemapmiss$MAF
+#'LD <- toydata_finemapmiss$LD
 #'
-#'n <- toydata_FINEMAPMISS$study_sample_sizes
+#'n <- toydata_finemapmiss$study_sample_sizes
 #'p <- dim(LD)[1]
 #'
 #'#Simulating missingness in 20% of variants (including the true causal variant)
-#'missing_data <- unique(sort(c(toydata_FINEMAPMISS$causal_snp,
+#'missing_data <- unique(sort(c(toydata_finemapmiss$causal_snp,
 #'                               cbind(sample(1:p, round(p*0.2))))))
 #'
 #'#Which dataset are the variants missing from?
@@ -124,7 +125,7 @@
 #'variant_sample_sizes[missing_data] <- n[1]
 #'
 #'#Running FINEMAPMISS
-#'output_FMM <- FINEMAPMISS(ses = ses,
+#'output_FMM <- run_finemapmiss(ses = ses,
 #'                          betas = betas,
 #'                          R = LD,
 #'                          n_studies = 2,
@@ -132,7 +133,7 @@
 #'                          freqs = MAF)
 #'
 #'
-run_FINEMAPMISS <- function(betas,
+run_finemapmiss <- function(betas,
                         ses,
                         R,
                         n_studies,
@@ -163,7 +164,8 @@ run_FINEMAPMISS <- function(betas,
                         find_optimal_start = FALSE,
                         n_start_configs = 1000,
                         start_config_sizes = 100,
-                        initial_config_size = 2){
+                        initial_config_size = 2,
+                        prior_exponent = 1){
 
 
   #Changing input into matrix form.
@@ -410,7 +412,7 @@ run_FINEMAPMISS <- function(betas,
   tt <- 1
 
   #Creating log prior vector for number of causal variants k, (ranges from 0:p)
-  log_prior <- -(0:p)*log(p) + (p-0:p)*log(1 - 1/p)
+  log_prior <- -(0:p)*log(p^(prior_exponent)) + (p-0:p)*log(1 - 1/p^(prior_exponent))
   log_prior[(max_causals + 2):(p+1)] <- -Inf
   log_prior[1] <- -Inf
   log_prior <- log_prior - logsumexp(log_prior)

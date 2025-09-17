@@ -1,7 +1,7 @@
-#' FINEMAP-MISS PIPs
+#' FINEMAP-miss PIPs
 #'
 #'Computes the postrior inclusion probabilities (PIPs), given the evaluated
-#'causal configurations in FINEMAP-MISS.
+#'causal configurations in FINEMAP-miss.
 #'
 #' @param init_configs String vector of initial configurations for each iteration of
 #' Shotgun Stochastic Search. Stored as a collapsed string.

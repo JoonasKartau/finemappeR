@@ -2,7 +2,7 @@
 % Please edit documentation in R/create_credible_sets.R
 \name{.create_credible_sets}
 \alias{.create_credible_sets}
-\title{FINEMAP-MISS credible sets}
+\title{FINEMAP-miss credible sets}
 \usage{
 .create_credible_sets(
   cred_sizes,
@@ -50,5 +50,5 @@ List of credible sets as matrices for each 'cred_size' in 'cred_sizes'. If 'leng
 single credible set matrix is returned.
 }
 \description{
-Computes credible sets from the fine-mapping output of FINEMAP-MISS.
+Computes credible sets from the fine-mapping output of FINEMAP-miss.
 }
