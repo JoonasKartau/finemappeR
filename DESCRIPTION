@@ -13,10 +13,10 @@ Authors@R: c(
       role = c("aut")
     )
   )
-Description: This package contain functions for running FINEMAP-MISS, 
+Description: This package contain functions for running FINEMAP-miss, 
   a Bayesian variable selection method for genetic fine-mapping. 
-  This method is an extention of FINEMAP (Benner et al. 2016). 
-  FINEMAP-MISS differs from previous methods, as it allows for the combination 
+  This method is an extension of FINEMAP (Benner et al. 2016). 
+  FINEMAP-miss differs from previous methods, as it allows for the combination 
   of multiple datasets across biobanks, while also functioning with missing data.
 License: GPL-3
 Encoding: UTF-8
