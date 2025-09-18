@@ -1,0 +1,24 @@
+# R history and session files
+.Rhistory
+.RData
+.Rproj.user/
+.Ruserdata
+
+# R package build outputs
+.Rcheck/
+*.tar.gz
+*.Rproj
+.Rbuildignore
+
+# Documentation and vignettes build artifacts
+inst/doc/
+doc/
+Meta/
+vignettes/*.html
+vignettes/*.pdf
+*.utf8.md
+*.knit.md
+
+# OS-specific files
+.DS_Store
+Thumbs.db
