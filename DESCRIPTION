@@ -28,3 +28,5 @@ Depends:
 Suggests: 
     knitr,
     rmarkdown
+BuildVignettes: yes
+
