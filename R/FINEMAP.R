@@ -3,7 +3,8 @@
 #' \code{original_finemap} performs Bayesian variable selection on a set of genetic
 #' variants and a phenotype, using marginal effect estimates \eqn{\boldsymbol{\widehat \beta}},
 #'  their standard errors \eqn{\boldsymbol{s}}, and  a reference LD panel \eqn{\boldsymbol{R}}
-#'  as input. This is a recreation of the C++ implementation by Christian Benner and Matti Pirinen.
+#'  as input. This is a recreation of the C++ implementation by Christian Benner and Matti Pirinen,
+#'  that does not include many of the features that make official implementation effective and efficient.
 #'  Not recommended for meta-analyzed GWAS data.
 #'
 #' @param ses A vector or matrix of GWAS marginal effect standard errors.
